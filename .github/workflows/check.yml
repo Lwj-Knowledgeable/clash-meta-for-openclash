@@ -1,0 +1,24 @@
+name: Openwrt Build Bot
+on:
+  schedule:
+  - cron: 0 17 * * *
+
+jobs:
+  check:
+    name: Check new version of Clash.Meta
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Prepare feeds
+        run: |
+          ./check.sh
+          current_version=$(cat Makefile | grep PKG_VERSION | head -n 1 | cut -d "=" -f 2)
+          git config user.name "bot"
+          git config user.email "bot@github.com"
+          git add .
+          git commit -m "$(TZ='Asia/Shanghai' date +@%Y%m%d) Bump Clash.Meta to $current_version"
+          git push --force --quiet "https://x-access-token:${{ secrets.P_TOKEN }}@github.com/$GITHUB_REPOSITORY" HEAD:main
+
