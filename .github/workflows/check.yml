@@ -19,6 +19,10 @@ jobs:
           git config user.name "bot"
           git config user.email "bot@github.com"
           git add .
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes to commit"
+            exit 0
+          fi
           git commit -m "$(TZ='Asia/Shanghai' date +@%Y%m%d) Bump Clash.Meta to $current_version"
           git push --force --quiet "https://x-access-token:${{ secrets.P_TOKEN }}@github.com/$GITHUB_REPOSITORY" HEAD:main
 
