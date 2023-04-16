@@ -1,4 +1,5 @@
 #!/bin/sh
+export BUILD_TIME=$(date)
 cp feeds.conf.default feeds.conf
 echo "src-link openwrt_packages $(pwd)/openwrt-packages" >> ./feeds.conf
 
